@@ -40,5 +40,4 @@ public class FakeStoreClientImpl implements FakeStoreClient{
 
         return products;
     }
-
 }
