@@ -26,18 +26,23 @@ public class FakeStoreClientImpl implements FakeStoreClient{
     private String productEndpoint;
 
 
-    public List<Product> getAllProducts(){
+    public List<FakeStoreProductResponseDto> getAllProducts(){
 
         String fakeStoreProductUrl = domainName.concat(productEndpoint);
 
         RestTemplate restTemplate = restTemplateBuilder.build();
         ResponseEntity<FakeStoreProductResponseDto[]> fakeStoreProductResponseList = restTemplate.getForEntity(fakeStoreProductUrl, FakeStoreProductResponseDto[].class);
 
-        List<Product> products = new ArrayList<>();
-        for(FakeStoreProductResponseDto fakeStoreProductResponse : fakeStoreProductResponseList.getBody()){
-            products.add(DtoToEntityMapper.convertFakeProductDtoToEntity(fakeStoreProductResponse));
-        }
+        return List.of(fakeStoreProductResponseList.getBody());
+    }
 
-        return products;
+    public FakeStoreProductResponseDto getProductById(int prodId){
+
+        String fakeStoreProductUrl = domainName.concat(productEndpoint).concat("/"+prodId);
+
+        RestTemplate restTemplate = restTemplateBuilder.build();
+        ResponseEntity<FakeStoreProductResponseDto> fakeStoreProductResponse = restTemplate.getForEntity(fakeStoreProductUrl, FakeStoreProductResponseDto.class);
+
+        return fakeStoreProductResponse.getBody();
     }
 }

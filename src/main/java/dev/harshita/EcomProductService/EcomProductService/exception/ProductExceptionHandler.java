@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class ProductExceptionHandler {
 
-    @ExceptionHandler(NoProductFoundException.class)
-    public ResponseEntity handleNoProductFound(NoProductFoundException noProductFoundException){
+    @ExceptionHandler({NoProductFoundException.class,ProductNotFoundException.class})
+    public ResponseEntity handleNoProductFound(RuntimeException e){
         ExceptionResponseDto responseDto = new ExceptionResponseDto(
-                noProductFoundException.getMessage(),
+                e.getMessage(),
                 404
         );
         return new ResponseEntity<>(responseDto, HttpStatus.NOT_FOUND);

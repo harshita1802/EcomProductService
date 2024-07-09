@@ -34,6 +34,7 @@ public class ProductController {
 
     @GetMapping("/product/{id}")
     public ResponseEntity getProductById(@PathVariable int id){
+
         Product product = productService.getById(id);
 
         return ResponseEntity.ok(EntityToDtoMapper.convertProductToDto(product));
