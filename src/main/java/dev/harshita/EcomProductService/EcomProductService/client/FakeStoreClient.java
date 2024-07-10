@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface FakeStoreClient {
     List<FakeStoreProductResponseDto> getAllProducts();
+
     FakeStoreProductResponseDto getProductById(int prodId);
 }

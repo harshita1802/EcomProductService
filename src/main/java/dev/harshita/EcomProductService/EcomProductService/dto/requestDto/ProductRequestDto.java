@@ -1,13 +1,11 @@
-package dev.harshita.EcomProductService.EcomProductService.entity;
+package dev.harshita.EcomProductService.EcomProductService.dto.requestDto;
 
-import jakarta.persistence.Entity;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
 @Setter
-@Entity
-public class Product extends BaseModel{
+@Getter
+public class ProductRequestDto {
     private String title;
     private double price;
     private String category;

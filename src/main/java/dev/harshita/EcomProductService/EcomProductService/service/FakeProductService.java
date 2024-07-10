@@ -1,40 +1,40 @@
 package dev.harshita.EcomProductService.EcomProductService.service;
 
 import dev.harshita.EcomProductService.EcomProductService.client.FakeStoreClient;
+import dev.harshita.EcomProductService.EcomProductService.dto.requestDto.ProductRequestDto;
 import dev.harshita.EcomProductService.EcomProductService.dto.responseDto.FakeStoreProductResponseDto;
+import dev.harshita.EcomProductService.EcomProductService.dto.responseDto.ProductResponseDto;
 import dev.harshita.EcomProductService.EcomProductService.entity.Product;
 import dev.harshita.EcomProductService.EcomProductService.exception.NoProductFoundException;
 import dev.harshita.EcomProductService.EcomProductService.exception.ProductNotFoundException;
 import dev.harshita.EcomProductService.EcomProductService.mapper.DtoToEntityMapper;
+import dev.harshita.EcomProductService.EcomProductService.mapper.EntityToDtoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-@Service
-public class FakeProductService implements ProductService{
+@Service("fakeProductService")
+public class FakeProductService{
 
     @Autowired
     private FakeStoreClient fakeStoreClient;
 
-    @Override
-    public Product addProduct(Product product) {
+    public ProductResponseDto addProduct(ProductRequestDto product) {
         return null;
     }
 
-    @Override
-    public boolean deleteProduct(int prodId) {
+    public boolean deleteProduct(UUID prodId) {
         return false;
     }
 
-    @Override
-    public Product updateProduct(int prodId) {
+    public Product updateProduct(UUID prodId) {
         return null;
     }
 
-    @Override
-    public List<Product> getAllProducts() throws NoProductFoundException{
+    public List<ProductResponseDto> getAllProducts() throws NoProductFoundException{
         List<FakeStoreProductResponseDto> responseDto = fakeStoreClient.getAllProducts();
 
         if(responseDto == null){
@@ -47,11 +47,16 @@ public class FakeProductService implements ProductService{
             products.add(DtoToEntityMapper.convertFakeProductDtoToEntity(fakeStoreProductResponse));
         }
 
-        return products;
+        List<ProductResponseDto> productResponseDto = new ArrayList<>();
+
+        for(Product product : products){
+            productResponseDto.add(EntityToDtoMapper.convertProductToDto(product));
+        }
+
+        return productResponseDto;
     }
 
-    @Override
-    public Product getById(int prodId) throws ProductNotFoundException {
+    public ProductResponseDto getById(int prodId) throws ProductNotFoundException {
 
         FakeStoreProductResponseDto responseDto = fakeStoreClient.getProductById(prodId);
 
@@ -59,6 +64,9 @@ public class FakeProductService implements ProductService{
             throw new ProductNotFoundException("Product not found!");
         }
 
-        return DtoToEntityMapper.convertFakeProductDtoToEntity(responseDto);
+        Product product = DtoToEntityMapper.convertFakeProductDtoToEntity(responseDto);
+
+        return EntityToDtoMapper.convertProductToDto(product);
     }
+
 }
