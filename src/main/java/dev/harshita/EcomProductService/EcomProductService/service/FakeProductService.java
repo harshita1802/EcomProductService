@@ -50,7 +50,7 @@ public class FakeProductService{
         List<ProductResponseDto> productResponseDto = new ArrayList<>();
 
         for(Product product : products){
-            productResponseDto.add(EntityToDtoMapper.convertProductToDto(product));
+            productResponseDto.add(EntityToDtoMapper.convertProductToResponseDto(product));
         }
 
         return productResponseDto;
@@ -66,7 +66,7 @@ public class FakeProductService{
 
         Product product = DtoToEntityMapper.convertFakeProductDtoToEntity(responseDto);
 
-        return EntityToDtoMapper.convertProductToDto(product);
+        return EntityToDtoMapper.convertProductToResponseDto(product);
     }
 
 }

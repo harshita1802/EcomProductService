@@ -12,32 +12,45 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
+@RequestMapping("/product")
 public class ProductController {
 
     @Autowired
     @Qualifier("productService")
     private ProductService productService;
 
-    @GetMapping("/products")
-    public ResponseEntity getAllProducts(){
+    @PostMapping
+    public ResponseEntity<ProductResponseDto> addProduct(@RequestBody ProductRequestDto productRequestDto){
+        ProductResponseDto productResponseDto = productService.addProduct(productRequestDto);
+
+        return ResponseEntity.ok(productResponseDto);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<ProductResponseDto>> getAllProducts(){
         List<ProductResponseDto> products = productService.getAllProducts();
 
         return ResponseEntity.ok(products);
     }
 
-    @GetMapping("/product/{id}")
-    public ResponseEntity getProductById(@PathVariable UUID id){
-
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductResponseDto> getProductById(@PathVariable UUID id){
         ProductResponseDto productResponseDto = productService.getById(id);
 
         return ResponseEntity.ok(productResponseDto);
     }
 
-    @PostMapping("/product")
-    public ResponseEntity addProduct(@RequestBody ProductRequestDto productRequestDto){
-        ProductResponseDto productResponseDto = productService.addProduct(productRequestDto);
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductResponseDto> updateProduct(@PathVariable("id") UUID prodId, @RequestBody ProductRequestDto productRequestDto){
+        ProductResponseDto productResponseDto = productService.updateProduct(prodId,productRequestDto);
 
         return ResponseEntity.ok(productResponseDto);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Boolean> deleteProduct(@PathVariable UUID id){
+        return ResponseEntity.ok(productService.deleteProduct(id));
     }
 
 }
