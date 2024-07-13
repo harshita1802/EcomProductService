@@ -2,8 +2,6 @@ package dev.harshita.EcomProductService.EcomProductService.controller;
 
 import dev.harshita.EcomProductService.EcomProductService.dto.requestDto.CategoryRequestDto;
 import dev.harshita.EcomProductService.EcomProductService.dto.responseDto.CategoryResponseDto;
-import dev.harshita.EcomProductService.EcomProductService.entity.Category;
-import dev.harshita.EcomProductService.EcomProductService.repository.CategoryRepository;
 import dev.harshita.EcomProductService.EcomProductService.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +16,7 @@ public class CategoryController {
 
     @Autowired
     private CategoryService categoryService;
-    @Autowired
-    private CategoryRepository categoryRepository;
+
 
     @PostMapping
     public ResponseEntity<CategoryResponseDto> addCategory(@RequestBody CategoryRequestDto categoryRequestDto){
@@ -34,13 +31,6 @@ public class CategoryController {
 
         return ResponseEntity.ok(categoryResponseDtoList);
     }
-
-//    @GetMapping("/all")
-//    public ResponseEntity<List<Category>> getAllCategories(){
-//        List<Category> category = categoryRepository.findAll();
-//
-//        return ResponseEntity.ok(category);
-//    }
 
 
     @GetMapping("/{id}")

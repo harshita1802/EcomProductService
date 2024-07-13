@@ -6,10 +6,12 @@ import dev.harshita.EcomProductService.EcomProductService.dto.responseDto.Rating
 import dev.harshita.EcomProductService.EcomProductService.entity.Category;
 import dev.harshita.EcomProductService.EcomProductService.entity.Product;
 import dev.harshita.EcomProductService.EcomProductService.entity.Rating;
+import org.springframework.stereotype.Component;
 
+@Component
 public class EntityToDtoMapper {
 
-    public static ProductResponseDto convertProductToResponseDto(Product product){
+    public ProductResponseDto convertProductToResponseDto(Product product){
         ProductResponseDto productResponseDto = new ProductResponseDto();
         productResponseDto.setId(product.getId());
         productResponseDto.setName(product.getName());
@@ -24,7 +26,7 @@ public class EntityToDtoMapper {
         return productResponseDto;
     }
 
-    private static RatingResponseDto convertRatingToResponseDto(Rating rating) {
+    private RatingResponseDto convertRatingToResponseDto(Rating rating) {
         RatingResponseDto ratingResponseDto = new RatingResponseDto();
         ratingResponseDto.setRating(rating.getRating());
         ratingResponseDto.setCount(rating.getCount());
@@ -32,7 +34,7 @@ public class EntityToDtoMapper {
         return ratingResponseDto;
     }
 
-    public static CategoryResponseDto convertCategoryToResponseDto(Category category) {
+    public CategoryResponseDto convertCategoryToResponseDto(Category category) {
         CategoryResponseDto categoryResponseDto = new CategoryResponseDto();
         categoryResponseDto.setCategoryId(category.getId());
         categoryResponseDto.setCategoryName(category.getName());

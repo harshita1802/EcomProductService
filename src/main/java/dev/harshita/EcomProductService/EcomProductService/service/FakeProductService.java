@@ -5,7 +5,7 @@ import dev.harshita.EcomProductService.EcomProductService.dto.requestDto.Product
 import dev.harshita.EcomProductService.EcomProductService.dto.responseDto.FakeStoreProductResponseDto;
 import dev.harshita.EcomProductService.EcomProductService.dto.responseDto.ProductResponseDto;
 import dev.harshita.EcomProductService.EcomProductService.entity.Product;
-import dev.harshita.EcomProductService.EcomProductService.exception.NoProductFoundException;
+import dev.harshita.EcomProductService.EcomProductService.exception.NoProductsFoundException;
 import dev.harshita.EcomProductService.EcomProductService.exception.ProductNotFoundException;
 import dev.harshita.EcomProductService.EcomProductService.mapper.DtoToEntityMapper;
 import dev.harshita.EcomProductService.EcomProductService.mapper.EntityToDtoMapper;
@@ -21,6 +21,8 @@ public class FakeProductService{
 
     @Autowired
     private FakeStoreClient fakeStoreClient;
+    @Autowired
+    private EntityToDtoMapper entityToDtoMapper;
 
     public ProductResponseDto addProduct(ProductRequestDto product) {
         return null;
@@ -34,11 +36,11 @@ public class FakeProductService{
         return null;
     }
 
-    public List<ProductResponseDto> getAllProducts() throws NoProductFoundException{
+    public List<ProductResponseDto> getAllProducts() throws NoProductsFoundException {
         List<FakeStoreProductResponseDto> responseDto = fakeStoreClient.getAllProducts();
 
         if(responseDto == null){
-            throw new NoProductFoundException("There are no products to display!");
+            throw new NoProductsFoundException("There are no products to display!");
         }
 
         List<Product> products = new ArrayList<>();
@@ -50,7 +52,7 @@ public class FakeProductService{
         List<ProductResponseDto> productResponseDto = new ArrayList<>();
 
         for(Product product : products){
-            productResponseDto.add(EntityToDtoMapper.convertProductToResponseDto(product));
+            productResponseDto.add(entityToDtoMapper.convertProductToResponseDto(product));
         }
 
         return productResponseDto;
@@ -66,7 +68,7 @@ public class FakeProductService{
 
         Product product = DtoToEntityMapper.convertFakeProductDtoToEntity(responseDto);
 
-        return EntityToDtoMapper.convertProductToResponseDto(product);
+        return entityToDtoMapper.convertProductToResponseDto(product);
     }
 
 }

@@ -4,10 +4,11 @@ import dev.harshita.EcomProductService.EcomProductService.dto.requestDto.Product
 import dev.harshita.EcomProductService.EcomProductService.dto.responseDto.ProductResponseDto;
 import dev.harshita.EcomProductService.EcomProductService.entity.Category;
 import dev.harshita.EcomProductService.EcomProductService.entity.Product;
-import dev.harshita.EcomProductService.EcomProductService.exception.ProductNotFoundException;
+import dev.harshita.EcomProductService.EcomProductService.exception.NoProductsFoundException;
 import dev.harshita.EcomProductService.EcomProductService.mapper.DtoToEntityMapper;
 import dev.harshita.EcomProductService.EcomProductService.mapper.EntityToDtoMapper;
 import dev.harshita.EcomProductService.EcomProductService.repository.ProductRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,8 @@ public class ProductServiceImpl implements ProductService{
     private ProductRepository productRepository;
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private EntityToDtoMapper entityToDtoMapper;
 
 
     @Override
@@ -34,19 +37,15 @@ public class ProductServiceImpl implements ProductService{
 
         categoryService.addProductToCategory(savedCategory.getId(),savedProduct);
 
-        ProductResponseDto productResponseDto = EntityToDtoMapper.convertProductToResponseDto(savedProduct);
+        ProductResponseDto productResponseDto = entityToDtoMapper.convertProductToResponseDto(savedProduct);
 
         return productResponseDto;
     }
 
 
     @Override
-    public ProductResponseDto updateProduct(UUID prodId, ProductRequestDto productRequestDto) {
+    public ProductResponseDto updateProduct(UUID prodId, ProductRequestDto productRequestDto) throws EntityNotFoundException {
         Product savedProduct = productRepository.getReferenceById(prodId);
-
-        if(savedProduct == null){
-            throw new ProductNotFoundException("Product with the id not found!");
-        }
 
         if(productRequestDto.getName() != null){
             savedProduct.setName(productRequestDto.getName());
@@ -64,10 +63,9 @@ public class ProductServiceImpl implements ProductService{
         Category category = categoryService.getByName(productRequestDto.getCategoryName());
         savedProduct.setCategory(category);
 
-        return EntityToDtoMapper.convertProductToResponseDto(productRepository.save(savedProduct));
+        return entityToDtoMapper.convertProductToResponseDto(productRepository.save(savedProduct));
 
     }
-
 
     @Override
     public boolean deleteProduct(UUID prodId) {
@@ -75,15 +73,18 @@ public class ProductServiceImpl implements ProductService{
         return true;
     }
 
-
     @Override
-    public List<ProductResponseDto> getAllProducts() {
+    public List<ProductResponseDto> getAllProducts() throws NoProductsFoundException {
         List<Product> products = productRepository.findAll();
+
+        if(products == null || products.isEmpty()){
+            throw new NoProductsFoundException("Products not found!");
+        }
 
         List<ProductResponseDto> productResponseDtoList = new ArrayList<>();
 
         for(Product product : products){
-            ProductResponseDto productResponseDto = EntityToDtoMapper.convertProductToResponseDto(product);
+            ProductResponseDto productResponseDto = entityToDtoMapper.convertProductToResponseDto(product);
             productResponseDtoList.add(productResponseDto);
         }
 
@@ -92,13 +93,9 @@ public class ProductServiceImpl implements ProductService{
 
 
     @Override
-    public ProductResponseDto getById(UUID prodId) {
+    public ProductResponseDto getById(UUID prodId) throws EntityNotFoundException{
         Product product = productRepository.getReferenceById(prodId);
 
-        if(product == null){
-            throw new ProductNotFoundException("Product with the id not found!");
-        }
-
-        return EntityToDtoMapper.convertProductToResponseDto(product);
+        return entityToDtoMapper.convertProductToResponseDto(product);
     }
 }
