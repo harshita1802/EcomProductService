@@ -4,6 +4,7 @@ import dev.harshita.EcomProductService.EcomProductService.dto.requestDto.Product
 import dev.harshita.EcomProductService.EcomProductService.dto.responseDto.ProductResponseDto;
 import dev.harshita.EcomProductService.EcomProductService.entity.Category;
 import dev.harshita.EcomProductService.EcomProductService.entity.Product;
+import dev.harshita.EcomProductService.EcomProductService.exception.CategoryNotFoundException;
 import dev.harshita.EcomProductService.EcomProductService.exception.NoProductsFoundException;
 import dev.harshita.EcomProductService.EcomProductService.mapper.DtoToEntityMapper;
 import dev.harshita.EcomProductService.EcomProductService.mapper.EntityToDtoMapper;
@@ -25,13 +26,15 @@ public class ProductServiceImpl implements ProductService{
     private CategoryService categoryService;
     @Autowired
     private EntityToDtoMapper entityToDtoMapper;
+    @Autowired
+    private DtoToEntityMapper dtoToEntityMapper;
 
 
     @Override
-    public ProductResponseDto addProduct(ProductRequestDto productRequestDto) {
+    public ProductResponseDto addProduct(ProductRequestDto productRequestDto) throws CategoryNotFoundException {
         Category savedCategory = categoryService.getByName(productRequestDto.getCategoryName());
 
-        Product product = DtoToEntityMapper.convertProductRequestDtoToEntity(productRequestDto, savedCategory);
+        Product product = dtoToEntityMapper.convertProductRequestDtoToEntity(productRequestDto, savedCategory);
 
         Product savedProduct = productRepository.save(product);
 
@@ -47,12 +50,6 @@ public class ProductServiceImpl implements ProductService{
     public ProductResponseDto updateProduct(UUID prodId, ProductRequestDto productRequestDto) throws EntityNotFoundException {
         Product savedProduct = productRepository.getReferenceById(prodId);
 
-        if(productRequestDto.getName() != null){
-            savedProduct.setName(productRequestDto.getName());
-        }
-        if(productRequestDto.getBrand() != null){
-            savedProduct.setBrand(productRequestDto.getBrand());
-        }
         if(productRequestDto.getPrice() != 0){
             savedProduct.setPrice(productRequestDto.getPrice());
         }
@@ -60,16 +57,13 @@ public class ProductServiceImpl implements ProductService{
             savedProduct.setDescription(productRequestDto.getDescription());
         }
 
-        Category category = categoryService.getByName(productRequestDto.getCategoryName());
-        savedProduct.setCategory(category);
-
         return entityToDtoMapper.convertProductToResponseDto(productRepository.save(savedProduct));
-
     }
 
     @Override
     public boolean deleteProduct(UUID prodId) {
         productRepository.deleteById(prodId);
+
         return true;
     }
 

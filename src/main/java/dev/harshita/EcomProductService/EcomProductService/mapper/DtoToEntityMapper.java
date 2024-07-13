@@ -4,10 +4,12 @@ import dev.harshita.EcomProductService.EcomProductService.dto.requestDto.Product
 import dev.harshita.EcomProductService.EcomProductService.dto.responseDto.FakeStoreProductResponseDto;
 import dev.harshita.EcomProductService.EcomProductService.entity.Category;
 import dev.harshita.EcomProductService.EcomProductService.entity.Product;
+import org.springframework.stereotype.Component;
 
+@Component
 public class DtoToEntityMapper {
 
-    public static Product convertFakeProductDtoToEntity(FakeStoreProductResponseDto fakeStoreProductResponse){
+    public Product convertFakeProductDtoToEntity(FakeStoreProductResponseDto fakeStoreProductResponse){
         Product product = new Product();
         product.setId(fakeStoreProductResponse.getId());
         product.setName(fakeStoreProductResponse.getTitle());
@@ -17,7 +19,7 @@ public class DtoToEntityMapper {
         return product;
     }
 
-    public static Product convertProductRequestDtoToEntity(ProductRequestDto productRequestDto, Category category) {
+    public Product convertProductRequestDtoToEntity(ProductRequestDto productRequestDto, Category category) {
         Product product = new Product();
         product.setName(productRequestDto.getName());
         product.setBrand(productRequestDto.getBrand());

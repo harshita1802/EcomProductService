@@ -23,6 +23,8 @@ public class FakeProductService{
     private FakeStoreClient fakeStoreClient;
     @Autowired
     private EntityToDtoMapper entityToDtoMapper;
+    @Autowired
+    private DtoToEntityMapper dtoToEntityMapper;
 
     public ProductResponseDto addProduct(ProductRequestDto product) {
         return null;
@@ -46,7 +48,7 @@ public class FakeProductService{
         List<Product> products = new ArrayList<>();
 
         for(FakeStoreProductResponseDto fakeStoreProductResponse : responseDto){
-            products.add(DtoToEntityMapper.convertFakeProductDtoToEntity(fakeStoreProductResponse));
+            products.add(dtoToEntityMapper.convertFakeProductDtoToEntity(fakeStoreProductResponse));
         }
 
         List<ProductResponseDto> productResponseDto = new ArrayList<>();
@@ -66,7 +68,7 @@ public class FakeProductService{
             throw new ProductNotFoundException("Product not found!");
         }
 
-        Product product = DtoToEntityMapper.convertFakeProductDtoToEntity(responseDto);
+        Product product = dtoToEntityMapper.convertFakeProductDtoToEntity(responseDto);
 
         return entityToDtoMapper.convertProductToResponseDto(product);
     }
