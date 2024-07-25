@@ -17,11 +17,12 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisTemplate<Integer,Object> createRedisBean(){
-        RedisTemplate<Integer, Object> redisTemplate = new RedisTemplate<>();
+    public RedisTemplate<Object,Object> createRedisBean(){
+        RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory());
-        redisTemplate.setKeySerializer(new GenericToStringSerializer<>(Integer.class));
+        redisTemplate.setKeySerializer(new GenericToStringSerializer<>(Object.class));
         redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer()); // Example: JSON serializer
         return redisTemplate;
     }
+
 }

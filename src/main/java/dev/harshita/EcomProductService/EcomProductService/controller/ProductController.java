@@ -16,33 +16,32 @@ import java.util.UUID;
 public class ProductController {
 
     @Autowired
-    @Qualifier("fakeStoreService")
+    @Qualifier("customProductService")
     private ProductService productService;
 
-    @PostMapping
-    public ResponseEntity<ProductResponseDto> addProduct(@RequestBody ProductRequestDto productRequestDto){
-        ProductResponseDto productResponseDto = productService.addProduct(productRequestDto);
-
-        return ResponseEntity.ok(productResponseDto);
-    }
-
     @GetMapping("/all")
-    public ResponseEntity<List<ProductResponseDto>> getAllProducts(){
-        List<ProductResponseDto> products = productService.getAllProducts();
+    public ResponseEntity<List<? extends ProductResponseDto>> getAllProducts(){
+        List<? extends ProductResponseDto> products = productService.getAllProducts();
 
         return ResponseEntity.ok(products);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductResponseDto> getProductById(@PathVariable int id){
+    public ResponseEntity<? extends ProductResponseDto> getProductById(@PathVariable UUID id){
         ProductResponseDto productResponseDto = productService.getById(id);
 
         return ResponseEntity.ok(productResponseDto);
     }
 
+    @PostMapping
+    public ResponseEntity<? extends ProductResponseDto> addProduct(@RequestBody ProductRequestDto productRequestDto){
+        ProductResponseDto productResponseDto = productService.addProduct(productRequestDto);
+
+        return ResponseEntity.ok(productResponseDto);
+    }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductResponseDto> updateProduct(@PathVariable("id") UUID prodId, @RequestBody ProductRequestDto productRequestDto){
+    public ResponseEntity<? extends ProductResponseDto> updateProduct(@PathVariable("id") UUID prodId, @RequestBody ProductRequestDto productRequestDto){
         ProductResponseDto productResponseDto = productService.updateProduct(prodId,productRequestDto);
 
         return ResponseEntity.ok(productResponseDto);

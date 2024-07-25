@@ -1,6 +1,7 @@
 package dev.harshita.EcomProductService.EcomProductService.service;
 
 import dev.harshita.EcomProductService.EcomProductService.dto.requestDto.ProductRequestDto;
+import dev.harshita.EcomProductService.EcomProductService.dto.responseDto.CustomProductResponseDto;
 import dev.harshita.EcomProductService.EcomProductService.dto.responseDto.ProductResponseDto;
 import dev.harshita.EcomProductService.EcomProductService.model.Category;
 import dev.harshita.EcomProductService.EcomProductService.model.Product;
@@ -11,6 +12,7 @@ import dev.harshita.EcomProductService.EcomProductService.mapper.EntityToDtoMapp
 import dev.harshita.EcomProductService.EcomProductService.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,13 +28,14 @@ public class CustomProductServiceImpl implements ProductService{
     private CategoryService categoryService;
     @Autowired
     private EntityToDtoMapper entityToDtoMapper;
-
     @Autowired
     private DtoToEntityMapper dtoToEntityMapper;
+    @Autowired
+    private RedisTemplate<Object,Object> redisTemplate;
 
 
     @Override
-    public ProductResponseDto addProduct(ProductRequestDto productRequestDto) throws CategoryNotFoundException {
+    public CustomProductResponseDto addProduct(ProductRequestDto productRequestDto) throws CategoryNotFoundException {
         Category savedCategory = categoryService.getByName(productRequestDto.getCategoryName());
 
         Product product = dtoToEntityMapper.convertProductRequestDtoToEntity(productRequestDto, savedCategory);
@@ -41,14 +44,14 @@ public class CustomProductServiceImpl implements ProductService{
 
         categoryService.addProductToCategory(savedCategory.getId(),savedProduct);
 
-        ProductResponseDto productResponseDto = entityToDtoMapper.convertProductToResponseDto(savedProduct);
+        CustomProductResponseDto customProductResponseDto = entityToDtoMapper.convertProductToResponseDto(savedProduct);
 
-        return productResponseDto;
+        return customProductResponseDto;
     }
 
 
     @Override
-    public ProductResponseDto updateProduct(UUID prodId, ProductRequestDto productRequestDto) throws EntityNotFoundException {
+    public CustomProductResponseDto updateProduct(UUID prodId, ProductRequestDto productRequestDto) throws EntityNotFoundException {
         Product savedProduct = productRepository.getReferenceById(prodId);
 
         if(productRequestDto.getPrice() != 0){
@@ -69,17 +72,17 @@ public class CustomProductServiceImpl implements ProductService{
     }
 
     @Override
-    public List<ProductResponseDto> getAllProducts() throws NoProductsFoundException {
+    public List<CustomProductResponseDto> getAllProducts() throws NoProductsFoundException {
         List<Product> products = productRepository.findAll();
 
         if(products == null || products.isEmpty()){
             throw new NoProductsFoundException("Products not found!");
         }
 
-        List<ProductResponseDto> productResponseDtoList = new ArrayList<>();
+        List<CustomProductResponseDto> productResponseDtoList = new ArrayList<>();
 
         for(Product product : products){
-            ProductResponseDto productResponseDto = entityToDtoMapper.convertProductToResponseDto(product);
+            CustomProductResponseDto productResponseDto = entityToDtoMapper.convertProductToResponseDto(product);
             productResponseDtoList.add(productResponseDto);
         }
 
@@ -88,10 +91,18 @@ public class CustomProductServiceImpl implements ProductService{
 
 
     @Override
-    public ProductResponseDto getByProductId(UUID prodId) throws EntityNotFoundException{
+    public CustomProductResponseDto getById(UUID prodId) throws EntityNotFoundException{
+        if(redisTemplate.hasKey(prodId)){
+            return (CustomProductResponseDto) redisTemplate.opsForValue().get(prodId);
+        }
+
         Product product = productRepository.getReferenceById(prodId);
 
-        return entityToDtoMapper.convertProductToResponseDto(product);
+        CustomProductResponseDto customProductResponseDto = entityToDtoMapper.convertProductToResponseDto(product);
+
+        redisTemplate.opsForValue().set(prodId,customProductResponseDto);
+
+        return customProductResponseDto;
     }
 
     @Override

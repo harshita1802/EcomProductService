@@ -1,6 +1,7 @@
 package dev.harshita.EcomProductService.EcomProductService.service;
 
 import dev.harshita.EcomProductService.EcomProductService.dto.requestDto.ProductRequestDto;
+import dev.harshita.EcomProductService.EcomProductService.dto.responseDto.CustomProductResponseDto;
 import dev.harshita.EcomProductService.EcomProductService.dto.responseDto.ProductResponseDto;
 import dev.harshita.EcomProductService.EcomProductService.model.Category;
 import dev.harshita.EcomProductService.EcomProductService.model.Product;
@@ -14,6 +15,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +35,10 @@ public class ProductServiceTest {
     private EntityToDtoMapper entityToDtoMapper;
     @Mock
     private DtoToEntityMapper dtoToEntityMapper;
+    @Mock
+    private RedisTemplate<Object,Object> redisTemplate;
+    @Mock
+    private ValueOperations<Object, Object> valueOperationsMock;
 
     @InjectMocks
     private CustomProductServiceImpl productService;
@@ -54,7 +61,7 @@ public class ProductServiceTest {
 
         Product savedProduct = new Product();
 
-        ProductResponseDto productResponseDto = new ProductResponseDto();
+        CustomProductResponseDto productResponseDto = new CustomProductResponseDto();
 
         when(categoryService.getByName(productRequestDto.getCategoryName())).thenReturn(category);
         when(dtoToEntityMapper.convertProductRequestDtoToEntity(productRequestDto, category)).thenReturn(product);
@@ -94,7 +101,7 @@ public class ProductServiceTest {
         savedProduct.setPrice(productRequestDto.getPrice());
         savedProduct.setDescription(productRequestDto.getDescription());
 
-        ProductResponseDto productResponseDto = new ProductResponseDto();
+        CustomProductResponseDto productResponseDto = new CustomProductResponseDto();
         productResponseDto.setPrice(savedProduct.getPrice());
         productResponseDto.setDescription(savedProduct.getDescription());
 
@@ -135,7 +142,7 @@ public class ProductServiceTest {
         List<Product> products = new ArrayList<>();
         products.add(new Product());
 
-        ProductResponseDto productResponseDto = new ProductResponseDto();
+        CustomProductResponseDto productResponseDto = new CustomProductResponseDto();
 
         List<ProductResponseDto> productResponseDtoList = new ArrayList<>();
         productResponseDtoList.add(productResponseDto);
@@ -144,7 +151,7 @@ public class ProductServiceTest {
         when(entityToDtoMapper.convertProductToResponseDto(products.get(0))).thenReturn(productResponseDto);
 
         //act
-        List<ProductResponseDto> result = productService.getAllProducts();
+        List<CustomProductResponseDto> result = productService.getAllProducts();
 
         //assert
         verify(productRepository).findAll();
@@ -174,24 +181,49 @@ public class ProductServiceTest {
 
     @Test
     public void testGetProductByIdSuccessfully(){
-
         //arrange
-        UUID randomId = UUID.randomUUID();
+        UUID prodId = UUID.randomUUID();
 
         Product product = new Product();
-        product.setId(randomId);
+        product.setId(prodId);
 
-        ProductResponseDto productResponseDto = new ProductResponseDto();
+        CustomProductResponseDto productResponseDto = new CustomProductResponseDto();
 
-        when(productRepository.getReferenceById(randomId)).thenReturn(product);
+        when(redisTemplate.hasKey(prodId)).thenReturn(false);
+        when(productRepository.getReferenceById(prodId)).thenReturn(product);
         when(entityToDtoMapper.convertProductToResponseDto(product)).thenReturn(productResponseDto);
+        when(redisTemplate.opsForValue()).thenReturn(valueOperationsMock);
 
         //act
-        ProductResponseDto result = productService.getByProductId(randomId);
+        ProductResponseDto result = productService.getById(prodId);
 
         //assert
-        verify(productRepository).getReferenceById(randomId);
+        verify(redisTemplate).hasKey(prodId);
+        verify(productRepository).getReferenceById(prodId);
         verify(entityToDtoMapper).convertProductToResponseDto(product);
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(productResponseDto,result);
+    }
+
+    @Test
+    public void testGetProductByIdCachedByRedis(){
+        //arrange
+        UUID prodId = UUID.randomUUID();
+
+        CustomProductResponseDto productResponseDto = new CustomProductResponseDto();
+
+        when(redisTemplate.hasKey(prodId)).thenReturn(true);
+        when(redisTemplate.opsForValue()).thenReturn(valueOperationsMock);
+        when(valueOperationsMock.get(prodId)).thenReturn(productResponseDto);
+
+        //act
+        ProductResponseDto result = productService.getById(prodId);
+
+        //assert
+        verify(redisTemplate).hasKey(prodId);
+        verify(redisTemplate).opsForValue();
+        verify(valueOperationsMock).get(prodId);
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(productResponseDto,result);
