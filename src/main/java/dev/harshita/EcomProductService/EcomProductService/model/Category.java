@@ -1,8 +1,7 @@
-package dev.harshita.EcomProductService.EcomProductService.entity;
+package dev.harshita.EcomProductService.EcomProductService.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;

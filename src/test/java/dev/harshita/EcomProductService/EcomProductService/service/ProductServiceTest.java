@@ -2,8 +2,8 @@ package dev.harshita.EcomProductService.EcomProductService.service;
 
 import dev.harshita.EcomProductService.EcomProductService.dto.requestDto.ProductRequestDto;
 import dev.harshita.EcomProductService.EcomProductService.dto.responseDto.ProductResponseDto;
-import dev.harshita.EcomProductService.EcomProductService.entity.Category;
-import dev.harshita.EcomProductService.EcomProductService.entity.Product;
+import dev.harshita.EcomProductService.EcomProductService.model.Category;
+import dev.harshita.EcomProductService.EcomProductService.model.Product;
 import dev.harshita.EcomProductService.EcomProductService.exception.NoProductsFoundException;
 import dev.harshita.EcomProductService.EcomProductService.mapper.DtoToEntityMapper;
 import dev.harshita.EcomProductService.EcomProductService.mapper.EntityToDtoMapper;
@@ -34,7 +34,7 @@ public class ProductServiceTest {
     private DtoToEntityMapper dtoToEntityMapper;
 
     @InjectMocks
-    private ProductServiceImpl productService;
+    private CustomProductServiceImpl productService;
 
     @BeforeEach
     public void initialise(){
@@ -187,7 +187,7 @@ public class ProductServiceTest {
         when(entityToDtoMapper.convertProductToResponseDto(product)).thenReturn(productResponseDto);
 
         //act
-        ProductResponseDto result = productService.getById(randomId);
+        ProductResponseDto result = productService.getByProductId(randomId);
 
         //assert
         verify(productRepository).getReferenceById(randomId);

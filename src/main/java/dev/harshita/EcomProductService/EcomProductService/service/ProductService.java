@@ -10,6 +10,7 @@ public interface ProductService {
     ProductResponseDto addProduct(ProductRequestDto productRequestDto);
     boolean deleteProduct(UUID prodId);
     List<ProductResponseDto> getAllProducts();
-    ProductResponseDto getById(UUID prodId);
+    ProductResponseDto getByProductId(UUID prodId);
+    ProductResponseDto getById(int prodId);
     ProductResponseDto updateProduct(UUID prodId, ProductRequestDto productRequestDto);
 }

@@ -1,6 +1,6 @@
 package dev.harshita.EcomProductService.EcomProductService.dto.responseDto;
 
-import dev.harshita.EcomProductService.EcomProductService.entity.Product;
+import dev.harshita.EcomProductService.EcomProductService.model.Product;
 import lombok.Getter;
 import lombok.Setter;
 

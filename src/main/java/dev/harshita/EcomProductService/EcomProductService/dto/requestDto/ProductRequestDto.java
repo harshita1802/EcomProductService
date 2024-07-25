@@ -1,10 +1,8 @@
 package dev.harshita.EcomProductService.EcomProductService.dto.requestDto;
 
-import dev.harshita.EcomProductService.EcomProductService.entity.constant.RegisteredBrand;
+import dev.harshita.EcomProductService.EcomProductService.model.constant.RegisteredBrand;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.UUID;
 
 @Setter
 @Getter

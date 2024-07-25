@@ -3,9 +3,9 @@ package dev.harshita.EcomProductService.EcomProductService.mapper;
 import dev.harshita.EcomProductService.EcomProductService.dto.responseDto.CategoryResponseDto;
 import dev.harshita.EcomProductService.EcomProductService.dto.responseDto.ProductResponseDto;
 import dev.harshita.EcomProductService.EcomProductService.dto.responseDto.RatingResponseDto;
-import dev.harshita.EcomProductService.EcomProductService.entity.Category;
-import dev.harshita.EcomProductService.EcomProductService.entity.Product;
-import dev.harshita.EcomProductService.EcomProductService.entity.Rating;
+import dev.harshita.EcomProductService.EcomProductService.model.Category;
+import dev.harshita.EcomProductService.EcomProductService.model.Product;
+import dev.harshita.EcomProductService.EcomProductService.model.Rating;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,7 +13,7 @@ public class EntityToDtoMapper {
 
     public ProductResponseDto convertProductToResponseDto(Product product){
         ProductResponseDto productResponseDto = new ProductResponseDto();
-        productResponseDto.setId(product.getId());
+//        productResponseDto.setId(product.getId());
         productResponseDto.setName(product.getName());
         productResponseDto.setBrand(product.getBrand());
         productResponseDto.setPrice(product.getPrice());

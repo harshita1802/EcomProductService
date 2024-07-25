@@ -1,4 +1,4 @@
-package dev.harshita.EcomProductService.EcomProductService.entity;
+package dev.harshita.EcomProductService.EcomProductService.model;
 
 import jakarta.persistence.Entity;
 import lombok.Getter;

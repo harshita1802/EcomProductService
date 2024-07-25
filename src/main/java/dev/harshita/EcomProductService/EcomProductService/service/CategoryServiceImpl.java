@@ -2,8 +2,8 @@ package dev.harshita.EcomProductService.EcomProductService.service;
 
 import dev.harshita.EcomProductService.EcomProductService.dto.requestDto.CategoryRequestDto;
 import dev.harshita.EcomProductService.EcomProductService.dto.responseDto.CategoryResponseDto;
-import dev.harshita.EcomProductService.EcomProductService.entity.Category;
-import dev.harshita.EcomProductService.EcomProductService.entity.Product;
+import dev.harshita.EcomProductService.EcomProductService.model.Category;
+import dev.harshita.EcomProductService.EcomProductService.model.Product;
 import dev.harshita.EcomProductService.EcomProductService.exception.CategoryNotFoundException;
 import dev.harshita.EcomProductService.EcomProductService.exception.CategoryPresentException;
 import dev.harshita.EcomProductService.EcomProductService.mapper.EntityToDtoMapper;

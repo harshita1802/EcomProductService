@@ -2,8 +2,8 @@ package dev.harshita.EcomProductService.EcomProductService.service;
 
 import dev.harshita.EcomProductService.EcomProductService.dto.requestDto.ProductRequestDto;
 import dev.harshita.EcomProductService.EcomProductService.dto.responseDto.ProductResponseDto;
-import dev.harshita.EcomProductService.EcomProductService.entity.Category;
-import dev.harshita.EcomProductService.EcomProductService.entity.Product;
+import dev.harshita.EcomProductService.EcomProductService.model.Category;
+import dev.harshita.EcomProductService.EcomProductService.model.Product;
 import dev.harshita.EcomProductService.EcomProductService.exception.CategoryNotFoundException;
 import dev.harshita.EcomProductService.EcomProductService.exception.NoProductsFoundException;
 import dev.harshita.EcomProductService.EcomProductService.mapper.DtoToEntityMapper;
@@ -17,8 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@Service("productService")
-public class ProductServiceImpl implements ProductService{
+@Service("customProductService")
+public class CustomProductServiceImpl implements ProductService{
 
     @Autowired
     private ProductRepository productRepository;
@@ -26,6 +26,7 @@ public class ProductServiceImpl implements ProductService{
     private CategoryService categoryService;
     @Autowired
     private EntityToDtoMapper entityToDtoMapper;
+
     @Autowired
     private DtoToEntityMapper dtoToEntityMapper;
 
@@ -87,9 +88,15 @@ public class ProductServiceImpl implements ProductService{
 
 
     @Override
-    public ProductResponseDto getById(UUID prodId) throws EntityNotFoundException{
+    public ProductResponseDto getByProductId(UUID prodId) throws EntityNotFoundException{
         Product product = productRepository.getReferenceById(prodId);
 
         return entityToDtoMapper.convertProductToResponseDto(product);
     }
+
+    @Override
+    public ProductResponseDto getById(int prodId) {
+        return null;
+    }
+
 }

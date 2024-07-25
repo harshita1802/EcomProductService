@@ -1,4 +1,4 @@
-package dev.harshita.EcomProductService.EcomProductService.entity.constant;
+package dev.harshita.EcomProductService.EcomProductService.model.constant;
 
 public enum RegisteredBrand {
     APPLE,

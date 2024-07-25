@@ -16,7 +16,7 @@ import java.util.UUID;
 public class ProductController {
 
     @Autowired
-    @Qualifier("productService")
+    @Qualifier("fakeStoreService")
     private ProductService productService;
 
     @PostMapping
@@ -34,7 +34,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductResponseDto> getProductById(@PathVariable UUID id){
+    public ResponseEntity<ProductResponseDto> getProductById(@PathVariable int id){
         ProductResponseDto productResponseDto = productService.getById(id);
 
         return ResponseEntity.ok(productResponseDto);

@@ -1,6 +1,6 @@
 package dev.harshita.EcomProductService.EcomProductService.repository;
 
-import dev.harshita.EcomProductService.EcomProductService.entity.Product;
+import dev.harshita.EcomProductService.EcomProductService.model.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

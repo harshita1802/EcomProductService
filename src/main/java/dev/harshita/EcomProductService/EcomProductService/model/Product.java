@@ -1,7 +1,7 @@
-package dev.harshita.EcomProductService.EcomProductService.entity;
+package dev.harshita.EcomProductService.EcomProductService.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import dev.harshita.EcomProductService.EcomProductService.entity.constant.RegisteredBrand;
+import dev.harshita.EcomProductService.EcomProductService.model.constant.RegisteredBrand;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
