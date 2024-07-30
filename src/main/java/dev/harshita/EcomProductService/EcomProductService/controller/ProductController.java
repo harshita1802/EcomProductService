@@ -33,21 +33,21 @@ public class ProductController {
         return ResponseEntity.ok(productResponseDto);
     }
 
-    @PostMapping
+    @PostMapping("/admin/add")
     public ResponseEntity<? extends ProductResponseDto> addProduct(@RequestBody ProductRequestDto productRequestDto){
         ProductResponseDto productResponseDto = productService.addProduct(productRequestDto);
 
         return ResponseEntity.ok(productResponseDto);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/admin/update/{id}")
     public ResponseEntity<? extends ProductResponseDto> updateProduct(@PathVariable("id") UUID prodId, @RequestBody ProductRequestDto productRequestDto){
         ProductResponseDto productResponseDto = productService.updateProduct(prodId,productRequestDto);
 
         return ResponseEntity.ok(productResponseDto);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/admin/delete/{id}")
     public ResponseEntity<Boolean> deleteProduct(@PathVariable UUID id){
         return ResponseEntity.ok(productService.deleteProduct(id));
     }

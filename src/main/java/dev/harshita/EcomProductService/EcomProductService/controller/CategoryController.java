@@ -18,14 +18,14 @@ public class CategoryController {
     private CategoryService categoryService;
 
 
-    @PostMapping
+    @PostMapping("/admin/add")
     public ResponseEntity<CategoryResponseDto> addCategory(@RequestBody CategoryRequestDto categoryRequestDto){
         CategoryResponseDto categoryResponseDto = categoryService.addCategory(categoryRequestDto);
 
         return ResponseEntity.ok(categoryResponseDto);
     }
 
-    @GetMapping("/all")
+    @GetMapping("/admin/all")
     public ResponseEntity<List<CategoryResponseDto>> getAllCategories(){
         List<CategoryResponseDto> categoryResponseDtoList = categoryService.getAllCategories();
 
@@ -33,7 +33,7 @@ public class CategoryController {
     }
 
 
-    @GetMapping("/{id}")
+    @GetMapping("/admin/{id}")
     public ResponseEntity<CategoryResponseDto> getCategoryById(@PathVariable UUID id){
         CategoryResponseDto categoryResponseDto = categoryService.getById(id);
 
@@ -41,7 +41,7 @@ public class CategoryController {
     }
 
 
-    @PutMapping("/{id}")
+    @PutMapping("/admin/{id}")
     public ResponseEntity<CategoryResponseDto> updateProduct(@PathVariable("id") UUID categoryId, @RequestBody CategoryRequestDto categoryRequestDto){
         CategoryResponseDto categoryResponseDto = categoryService.updateCategory(categoryId,categoryRequestDto);
 

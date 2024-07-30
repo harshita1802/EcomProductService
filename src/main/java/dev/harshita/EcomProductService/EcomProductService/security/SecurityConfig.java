@@ -15,12 +15,15 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                                .anyRequest().permitAll()
+                                .requestMatchers("/product/admin/*").hasAuthority("ADMIN")
+                                .requestMatchers("/category/admin/*").hasAuthority("ADMIN")
+                                .anyRequest().authenticated()
 //                        .anyRequest().authenticated()
                 )
-                .csrf().disable()
                 .cors().disable()
-                .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()));
+                .oauth2ResourceServer((oauth2) -> oauth2.jwt(jwtConfigurer -> {
+                                                jwtConfigurer.jwtAuthenticationConverter(new CustomJwtAuthenticationConverter());
+                                            }));
         return http.build();
     }
 
